@@ -1,0 +1,9 @@
+server:
+  servlet:
+    context-path: /alert-engine
+spring:
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+
+springdoc:
+  packages-to-scan: org.ce.wp.controller
