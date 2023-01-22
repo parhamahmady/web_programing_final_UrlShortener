@@ -72,8 +72,7 @@ public class EndpointServiceImpl implements EndpointService {
         AtomicInteger successful = new AtomicInteger();
         AtomicInteger unsuccessful = new AtomicInteger();
         requests.forEach(terminal -> {
-            int code = terminal.getStatusCode() % 100;
-            if (code == 2) {
+            if (Objects.isNull(terminal.getStatusCode()) || terminal.getStatusCode() % 100 == 2) {
                 successful.getAndIncrement();
             } else {
                 unsuccessful.getAndIncrement();

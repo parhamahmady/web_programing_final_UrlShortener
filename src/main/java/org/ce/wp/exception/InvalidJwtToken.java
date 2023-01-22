@@ -4,9 +4,9 @@ package org.ce.wp.exception;
  * @author Parham Ahmadi
  * @since 20.01.23
  */
-public class InvaildJwtToken extends Exception {
+public class InvalidJwtToken extends Exception {
 
-    public InvaildJwtToken(String message) {
+    public InvalidJwtToken(String message) {
         super(message);
     }
 }

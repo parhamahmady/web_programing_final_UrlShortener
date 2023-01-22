@@ -22,9 +22,9 @@ public class Url {
     @JoinColumn(name = "USER_ID", unique = true)
     private User user;
 
-    @Column(name = "URI")
+    @Column(name = "URI", nullable = false)
     private String uri;
 
-    @Column(name = "THRESHOLD")
+    @Column(name = "THRESHOLD", nullable = false)
     private Integer threshold;
 }

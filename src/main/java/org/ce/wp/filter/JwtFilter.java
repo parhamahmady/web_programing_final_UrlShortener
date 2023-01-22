@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.ce.wp.config.SpringSecurityConfiguration;
+import org.ce.wp.exception.CredentialsException;
 import org.ce.wp.service.AAService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,10 +15,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -36,7 +35,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     @SneakyThrows
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         String uri = request.getRequestURI().substring("alert-engine/".length());
         boolean isPermitted = Arrays.stream(SpringSecurityConfiguration.PERMITTED).anyMatch(
                 s -> antPathMatcher.match(s, uri));
@@ -50,7 +49,7 @@ public class JwtFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
                 filterChain.doFilter(request, response);
             } else {
-                throw new ServletException("Invalid Credentials");
+                throw new CredentialsException("Invalid Credentials");
             }
         } else {
             filterChain.doFilter(request, response);

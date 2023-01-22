@@ -4,9 +4,8 @@ import org.ce.wp.dto.GenerateTokenRequestDto;
 import org.ce.wp.dto.SignUpRequestDto;
 import org.ce.wp.dto.SignUpResponseDto;
 import org.ce.wp.exception.CredentialsException;
-import org.ce.wp.exception.InvaildJwtToken;
+import org.ce.wp.exception.InvalidJwtToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Optional;
 
@@ -22,7 +21,7 @@ public interface AAService {
 
     Optional<String> getUsernameByJwt(String token);
 
-    UsernamePasswordAuthenticationToken authenticateJwt(String token) throws InvaildJwtToken;
+    UsernamePasswordAuthenticationToken authenticateJwt(String token) throws InvalidJwtToken;
 
     SignUpResponseDto signUpUser(SignUpRequestDto requestDto);
 }

@@ -10,7 +10,7 @@ import org.ce.wp.dto.SignUpRequestDto;
 import org.ce.wp.dto.SignUpResponseDto;
 import org.ce.wp.entity.User;
 import org.ce.wp.exception.CredentialsException;
-import org.ce.wp.exception.InvaildJwtToken;
+import org.ce.wp.exception.InvalidJwtToken;
 import org.ce.wp.service.AAService;
 import org.ce.wp.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
@@ -62,19 +62,19 @@ public class AAServiceImpl implements AAService {
     }
 
     @Override
-    public UsernamePasswordAuthenticationToken authenticateJwt(String token) throws InvaildJwtToken {
+    public UsernamePasswordAuthenticationToken authenticateJwt(String token) throws InvalidJwtToken {
         Optional<String> username = getUsernameByJwt(token);
         if (username.isEmpty()) {
-            throw new InvaildJwtToken("Invalid Token: " + token);
+            throw new InvalidJwtToken("Invalid Token: " + token);
         }
         // TODO: 20.01.23 check exceptions
         boolean isTokenExpired = isExpired(token);
         if (isTokenExpired) {
-            throw new InvaildJwtToken("Expired Token: " + token);
+            throw new InvalidJwtToken("Expired Token: " + token);
         }
         Optional<User> user = userService.getUser(username.get());
         if (user.isEmpty()) {
-            throw new InvaildJwtToken("Token: " + token + " ,is not belong to a user");
+            throw new InvalidJwtToken("Token: " + token + " ,is not belong to a user");
         }
         UserDetails userDetails = getUserDetails(user.get());
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

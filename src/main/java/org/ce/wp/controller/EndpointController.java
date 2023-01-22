@@ -24,8 +24,8 @@ import org.springframework.web.bind.annotation.*;
  */
 @RestController
 @RequestMapping("/urls")
-@Tag(name = "Endpoints Controller")
 @RequiredArgsConstructor
+@Tag(name = "Endpoints Controller")
 public class EndpointController {
     private final EndpointService endpointService;
 
@@ -43,10 +43,10 @@ public class EndpointController {
         return endpointService.findEndPoint(((User) authentication.getPrincipal()).getUsername());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{urlId}")
     @Operation(description = "Report request status for specific url_id")
     @ApiResponse(responseCode = "200", description = "Successful Operation", content = @Content(schema = @Schema(implementation = UrlReportResponseDto.class)))
-    public UrlReportResponseDto reportUrl(@PathVariable String id, Authentication authentication) throws CredentialsException, InvalidUrlIdException {
-        return endpointService.reportUrl(id, ((User) authentication.getPrincipal()).getUsername());
+    public UrlReportResponseDto reportUrl(@PathVariable String urlId, Authentication authentication) throws CredentialsException, InvalidUrlIdException {
+        return endpointService.reportUrl(urlId, ((User) authentication.getPrincipal()).getUsername());
     }
 }
