@@ -1,0 +1,14 @@
+.idea
+/target/
+*.iml
+/.idea/
+/.idea/vcs.xml
+/.idea/uiDesigner.xml
+/.idea/sqldialects.xml
+/.idea/misc.xml
+/.idea/jarRepositories.xml
+/.idea/encodings.xml
+/.idea/dataSources.xml
+/.idea/compiler.xml
+/.idea/.gitignore
+/.idea/sonarlint/
