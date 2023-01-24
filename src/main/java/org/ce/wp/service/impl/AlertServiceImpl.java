@@ -1,6 +1,5 @@
 package org.ce.wp.service.impl;
 
-import lombok.RequiredArgsConstructor;
 import org.ce.wp.dto.AlertReportResponseDto;
 import org.ce.wp.entity.Terminal;
 import org.ce.wp.entity.Url;
@@ -13,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -23,10 +23,16 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since 22.01.23
  */
 @Service
-@RequiredArgsConstructor
 public class AlertServiceImpl implements AlertService {
     private final TerminalRepository terminalRepository;
     private final UrlRepository urlRepository;
+    private final Date requestTime;
+
+    public AlertServiceImpl(TerminalRepository terminalRepository, UrlRepository urlRepository) {
+        this.terminalRepository = terminalRepository;
+        this.urlRepository = urlRepository;
+        this.requestTime = new Date();
+    }
 
     @Override
     @SuppressWarnings("DuplicatedCode")
@@ -39,7 +45,7 @@ public class AlertServiceImpl implements AlertService {
         if (!urlOptional.get().getUser().getUsername().equals(username)) {
             throw new CredentialsException("UrlId :" + urlId + "not belong to username: " + username);
         }
-        List<Terminal> requests = terminalRepository.findAllByUrl(urlOptional.get());
+        List<Terminal> requests = terminalRepository.findAllByUrlAndRequestTimeAfter(urlOptional.get(), requestTime);
         AtomicInteger alertCount = new AtomicInteger(0);
         AtomicInteger unsuccessful = new AtomicInteger(0);
         requests.forEach(terminal -> {

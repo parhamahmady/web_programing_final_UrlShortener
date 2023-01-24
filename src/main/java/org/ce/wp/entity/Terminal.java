@@ -3,6 +3,7 @@ package org.ce.wp.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @author Parham Ahmadi
@@ -23,6 +24,10 @@ public class Terminal {
 
     @Column(name = "FAILURE_REASON")
     private String failureReason;
+
+    @Column(name = "REQUEST_TIME")
+    @Temporal(TemporalType.DATE)
+    private Date requestTime;
 
     @ManyToOne
     @JoinColumn(name = "URL_ID")

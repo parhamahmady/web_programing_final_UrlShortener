@@ -21,7 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SpringSecurityConfiguration {
 
     public static final String[] PERMITTED = {"/**.css", "/**.js", "/**.png", "/**.ico",
-            "/swagger-ui*",  "/swagger-ui/*", "/v3/api-docs/**", "/user/**", "/auth/**"};
+            "/swagger-ui*", "/swagger-ui/*", "/v3/api-docs/**", "/user/**", "/auth/**"};
 
     @Setter(onMethod = @__(@Autowired))
     private JwtFilter jwtFilter;
