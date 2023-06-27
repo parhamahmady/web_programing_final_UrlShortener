@@ -32,7 +32,7 @@ import java.util.Arrays;
 
 /**
  * @author Parham Ahmadi
- * @since 20.01.23
+ * @since 27.06.23
  */
 @Slf4j
 @Component
@@ -52,7 +52,7 @@ public class JwtFilter extends OncePerRequestFilter {
     @SneakyThrows
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) {
         try {
-            String uri = request.getRequestURI().substring("alert-engine/".length());
+            String uri = request.getRequestURI().substring("shortener/".length());
             boolean isPermitted = Arrays.stream(SpringSecurityConfiguration.PERMITTED).anyMatch(
                     s -> antPathMatcher.match(s, uri));
             if (!isPermitted) {

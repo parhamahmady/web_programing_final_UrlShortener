@@ -2,7 +2,7 @@ package org.ce.wp.exception;
 
 /**
  * @author Parham Ahmadi
- * @since 22.01.23
+ * @since 27.06.23
  */
 public class InvalidUrlIdException extends Exception {
 

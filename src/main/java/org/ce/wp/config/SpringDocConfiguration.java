@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * @author Parham Ahmadi
- * @since 22.01.23
+ * @since 27.06.23
  */
 @Configuration
 @OpenAPIDefinition(info = @Info(title = "WebProgrammingBackend - AlertEngine",

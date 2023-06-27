@@ -9,7 +9,7 @@ import org.ce.wp.exception.InvalidUrlIdException;
 
 /**
  * @author Parham Ahmadi
- * @since 22.01.23
+ * @since 27.06.23
  */
 public interface EndpointService {
 

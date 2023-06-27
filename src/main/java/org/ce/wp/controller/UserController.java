@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author Parham Ahmadi
- * @since 20.01.23
+ * @since 27.06.23
  */
 @RestController
 @RequestMapping("/user")

@@ -6,16 +6,17 @@ import javax.persistence.*;
 
 /**
  * @author Parham Ahmadi
- * @since 20.01.23
+ * @since 27.06.23
  */
 @Data
 @Entity
 @Table(name = "URL")
+@SequenceGenerator(name = "url_seq_gen", sequenceName = "URL_SEQ", allocationSize = 1)
 public class Url {
 
     @Id
     @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "url_seq_gen")
     private Long id;
 
     @ManyToOne
@@ -25,6 +26,6 @@ public class Url {
     @Column(name = "URI", nullable = false)
     private String uri;
 
-    @Column(name = "THRESHOLD", nullable = false)
-    private Integer threshold;
+    @Column(name = "COUNT", nullable = false)
+    private Integer count;
 }

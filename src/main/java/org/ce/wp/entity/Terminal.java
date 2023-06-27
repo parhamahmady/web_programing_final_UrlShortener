@@ -7,16 +7,17 @@ import java.util.Date;
 
 /**
  * @author Parham Ahmadi
- * @since 20.01.23
+ * @since 27.06.23
  */
 @Data
 @Entity
 @Table(name = "TERMINAL")
+@SequenceGenerator(name = "terminal_seq_gen", sequenceName = "TERMINAL_SEQ", allocationSize = 1)
 public class Terminal {
 
     @Id
     @Column(name = "ID")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "terminal_seq_gen")
     private Long id;
 
     @Column(name = "STATUS_CODE")

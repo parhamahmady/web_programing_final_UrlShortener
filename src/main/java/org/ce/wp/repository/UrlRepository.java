@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * @author Parham Ahmadi
- * @since 20.01.23
+ * @since 27.06.23
  */
 public interface UrlRepository extends JpaRepository<Url, Long> {
 

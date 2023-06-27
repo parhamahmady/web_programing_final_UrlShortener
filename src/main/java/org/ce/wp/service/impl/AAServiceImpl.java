@@ -28,7 +28,7 @@ import java.util.Optional;
 
 /**
  * @author Parham Ahmadi
- * @since 20.01.23
+ * @since 27.06.23
  */
 @Service
 @RequiredArgsConstructor
@@ -67,7 +67,7 @@ public class AAServiceImpl implements AAService {
         if (username.isEmpty()) {
             throw new InvalidJwtToken("Invalid Token: " + token);
         }
-        // TODO: 20.01.23 check exceptions
+        // TODO: 27.06.23 check exceptions
         boolean isTokenExpired = isExpired(token);
         if (isTokenExpired) {
             throw new InvalidJwtToken("Expired Token: " + token);

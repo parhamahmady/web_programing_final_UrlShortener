@@ -1,6 +1,6 @@
 server:
   servlet:
-    context-path: /alert-engine
+    context-path: /shortener
 spring:
   datasource:
     driver-class-name: oracle.jdbc.OracleDriver
