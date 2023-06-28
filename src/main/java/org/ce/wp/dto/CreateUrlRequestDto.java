@@ -9,5 +9,5 @@ import javax.validation.constraints.NotBlank;
  * @since 27.06.23
  */
 @Schema(title = "Create Url Request")
-public record CreateUrlRequestDto(@NotBlank String uri, int threshold) {
+public record CreateUrlRequestDto(@NotBlank String uri) {
 }

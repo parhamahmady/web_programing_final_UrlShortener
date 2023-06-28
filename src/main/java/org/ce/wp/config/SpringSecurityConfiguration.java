@@ -11,6 +11,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author Parham Ahmadi
@@ -20,8 +22,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SpringSecurityConfiguration {
 
-    public static final String[] PERMITTED = {"/**.css", "/**.js", "/**.png", "/**.ico",
-            "/swagger-ui*", "/swagger-ui/*", "/v3/api-docs/**", "/user/**", "/auth/**"};
+    public static final String[] PERMITTED = {"/**.css", "/**.js", "/**.png", "/**.ico", "/gw/**",
+            "/swagger-ui*", "/swagger-ui/*", "/v3/api-docs/**", "/user/**", "/auth/**", "/"};
 
     @Setter(onMethod = @__(@Autowired))
     private JwtFilter jwtFilter;
@@ -36,7 +38,6 @@ public class SpringSecurityConfiguration {
         http.csrf().disable()
                 .authorizeRequests()
                 .antMatchers(PERMITTED).permitAll();
-//                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }

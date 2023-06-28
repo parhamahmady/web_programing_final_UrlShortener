@@ -3,6 +3,7 @@ package org.ce.wp.service;
 import org.ce.wp.dto.SignUpRequestDto;
 import org.ce.wp.dto.SignUpResponseDto;
 import org.ce.wp.entity.User;
+import org.ce.wp.exception.CredentialsException;
 
 import java.util.Optional;
 
@@ -14,5 +15,7 @@ public interface UserService {
 
     Optional<User> getUser(String username);
 
-    boolean signUpUser(SignUpRequestDto requestDto);
+    User signUpUser(SignUpRequestDto requestDto) throws CredentialsException;
+
+    void activate(User user);
 }

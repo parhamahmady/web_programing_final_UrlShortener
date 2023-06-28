@@ -5,13 +5,14 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.impl.TextCodec;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.ce.wp.dto.GenerateTokenRequestDto;
+import org.ce.wp.dto.LoginRequestDto;
 import org.ce.wp.dto.SignUpRequestDto;
 import org.ce.wp.dto.SignUpResponseDto;
 import org.ce.wp.entity.User;
 import org.ce.wp.exception.CredentialsException;
 import org.ce.wp.exception.InvalidJwtToken;
 import org.ce.wp.service.AAService;
+import org.ce.wp.service.MailService;
 import org.ce.wp.service.UserService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -34,6 +35,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AAServiceImpl implements AAService {
     private final UserService userService;
+    private final MailService mailService;
     private static final byte[] KEY = TextCodec.BASE64.decode("Yn2kjibddFAWtnPJ2AFlL8WXmohJMCvigQggaEypa5E=");
 
     @Setter(onMethod = @__(@Value("${token.validity.time.ms}")))
@@ -50,10 +52,13 @@ public class AAServiceImpl implements AAService {
     }
 
     @Override
-    public String generateToken(GenerateTokenRequestDto requestDto) throws CredentialsException {
+    public String login(LoginRequestDto requestDto) throws CredentialsException {
         Optional<User> user = userService.getUser(requestDto.username());
         if (user.isEmpty()) {
             throw new UsernameNotFoundException("User Not found with username: " + requestDto.username());
+        }
+        if (!user.get().isActive()) {
+            throw new CredentialsException("User " + requestDto.username() + " Not Activated");
         }
         if (!user.get().getPassword().equals(requestDto.password())) {
             throw new CredentialsException("Invalid Password for user " + requestDto.username());
@@ -67,7 +72,6 @@ public class AAServiceImpl implements AAService {
         if (username.isEmpty()) {
             throw new InvalidJwtToken("Invalid Token: " + token);
         }
-        // TODO: 27.06.23 check exceptions
         boolean isTokenExpired = isExpired(token);
         if (isTokenExpired) {
             throw new InvalidJwtToken("Expired Token: " + token);
@@ -82,10 +86,21 @@ public class AAServiceImpl implements AAService {
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public SignUpResponseDto signUpUser(SignUpRequestDto requestDto) {
-        boolean result = userService.signUpUser(requestDto);
+    public SignUpResponseDto signUpUser(SignUpRequestDto requestDto) throws CredentialsException {
+        User result = userService.signUpUser(requestDto);
+        mailService.sendMain(requestDto.email(), "Link: http://localhost:8081/shortener/user/reg/" + result.getUsername());
         String token = generateToken(requestDto.username());
-        return new SignUpResponseDto(result, token);
+        return new SignUpResponseDto(true, token);
+    }
+
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void activate(String username) {
+        Optional<User> user = userService.getUser(username);
+        if (user.isEmpty()) {
+            throw new UsernameNotFoundException("User Not Found");
+        }
+        userService.activate(user.get());
     }
 
     private org.springframework.security.core.userdetails.User getUserDetails(User user) {

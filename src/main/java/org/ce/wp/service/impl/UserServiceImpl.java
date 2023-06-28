@@ -3,9 +3,11 @@ package org.ce.wp.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.ce.wp.dto.SignUpRequestDto;
 import org.ce.wp.entity.User;
-import org.ce.wp.exception.AlertEngineInternalException;
+import org.ce.wp.exception.CredentialsException;
+import org.ce.wp.exception.ShortenerInternalException;
 import org.ce.wp.repository.UserRepository;
 import org.ce.wp.service.UserService;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,14 +31,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean signUpUser(SignUpRequestDto requestDto) {
-        User user = new User();
-        user.setUsername(requestDto.username());
-        user.setPassword(requestDto.password());
-        user = userRepository.save(user);
-        if (Objects.isNull(user.getId())) {
-            throw new AlertEngineInternalException("Cant Save User");
+    public User signUpUser(SignUpRequestDto requestDto) throws CredentialsException {
+        User username = userRepository.findByUsername(requestDto.username());
+        if (Objects.nonNull(username)) {
+            throw new CredentialsException("Duplicate User");
         }
-        return true;
+        try {
+            User user = new User();
+            user.setUsername(requestDto.username());
+            user.setPassword(requestDto.password());
+            user.setEmail(requestDto.email());
+            user = userRepository.save(user);
+            if (Objects.isNull(user.getId())) {
+                throw new ShortenerInternalException("Cant Save User");
+            }
+            return user;
+        } catch (ConstraintViolationException e) {
+            throw new CredentialsException("Duplicate User");
+        }
+    }
+
+    @Override
+    public void activate(User user) {
+        user.setActive(true);
+        userRepository.save(user);
     }
 }

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Shortened URLs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+        }
+
+        .container {
+            max-width: 800px;
+            padding: 40px;
+            margin: 0 auto;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ccc;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        a.button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #337ab7;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+        }
+
+        a.button:hover {
+            background-color: #23527c;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>My Shortened URLs</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Original URL</th>
+            <th>Shortened URL</th>
+            <th>Creation Time</th>
+            <th>Call Count</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${urls.empty}">
+            <td colspan="2"> No Shorten Url Available</td>
+        </tr>
+        <tr th:each="url : ${urls}">
+            <td><span th:text="${url.uri}"> Original URL </span></td>
+            <td>/gw/<span th:text="${url.id}"> Shortened URL </span></td>
+            <td><span th:text="${url.creationTime}">Creation Time</span></td>
+            <td><span th:text="${url.count}">Call Count</span></td>
+        </tr>
+        </tbody>
+    </table>
+    <a href="/shortener/desktop" class="button">Back</a>
+</div>
+</body>
+</html>

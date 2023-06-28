@@ -1,7 +1,7 @@
-# WebProgramming - Alert Engine
+# WebProgramming - Shortener
 
 This application has written in Java-17 and using Spring IOC container \
-and maven as build tool. \
+and maven as build tool. 
 
 ## Requirements
 
@@ -33,7 +33,11 @@ docker run --name test-container -d -p <port>:8081 <your-docker-image-tag-name>
 Or run project manually by
 
 ```
-java -jar targer/*.jar
+java -jar target/*.jar
+```
+
+```
+open http://localhost:8081/shortener
 ```
 
 ## Usage
@@ -44,7 +48,6 @@ java -jar targer/*.jar
   >>> By default appliaction uses oracle database and at first you need to migrate your database by sql files included in project.
   >>> To specify database url,password,username check application.properties (use JDBC formate for URI).
   >>> To customize buisiness properties see also application.properties.  
->> To see full api documentation use /alert-engine/swagger-ui.html to visit swagger page.
 >> Also to make dynamic configuration you can mount your application.properties to /app/config/
 ```
 

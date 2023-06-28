@@ -3,6 +3,7 @@ package org.ce.wp.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * @author Parham Ahmadi
@@ -26,6 +27,10 @@ public class Url {
     @Column(name = "URI", nullable = false)
     private String uri;
 
-    @Column(name = "COUNT", nullable = false)
+    @Column(name = "CREATE_TIME", nullable = false)
+    @Temporal(TemporalType.DATE)
+    private Date creationTime;
+
+    @Column(name = "COUNT")
     private Integer count;
 }

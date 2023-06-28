@@ -3,26 +3,20 @@ package org.ce.wp.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.ce.wp.dto.CreateUrlRequestDto;
 import org.ce.wp.dto.CreateUrlResponseDto;
-import org.ce.wp.dto.FindUrlResponseDto;
-import org.ce.wp.dto.UrlReportResponseDto;
-import org.ce.wp.entity.Terminal;
 import org.ce.wp.entity.Url;
 import org.ce.wp.entity.User;
-import org.ce.wp.exception.CredentialsException;
-import org.ce.wp.exception.InvalidUrlIdException;
-import org.ce.wp.repository.TerminalRepository;
 import org.ce.wp.repository.UrlRepository;
 import org.ce.wp.service.EndpointService;
+import org.ce.wp.service.QRCodeService;
 import org.ce.wp.service.UserService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author Parham Ahmadi
@@ -33,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class EndpointServiceImpl implements EndpointService {
     private final UserService userService;
     private final UrlRepository urlRepository;
-    private final TerminalRepository terminalRepository;
+    private final QRCodeService qrCodeService;
 
     @Override
     @Transactional(propagation = Propagation.REQUIRES_NEW)
@@ -42,43 +36,28 @@ public class EndpointServiceImpl implements EndpointService {
         Url url = new Url();
         url.setUser(user);
         url.setUri(requestDto.uri());
-        url.setThreshold(requestDto.threshold());
+        url.setCreationTime(new Date(System.currentTimeMillis()));
+        url.setCount(0);
         url = urlRepository.save(url);
-        if (Objects.isNull(url.getId())) {
-            return new CreateUrlResponseDto(false);
-        }
-        return new CreateUrlResponseDto(true);
+        String image = qrCodeService.generateQrCode(requestDto.uri());
+        return new CreateUrlResponseDto(String.valueOf(url.getId()), image);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public FindUrlResponseDto findEndPoint(String username) {
+    public List<Url> findEndPoint(String username) {
         User user = getUser(username);
-        List<Url> urls = urlRepository.findByUser(user);
-        return new FindUrlResponseDto(urls);
+        return urlRepository.findByUser(user);
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public UrlReportResponseDto reportUrl(String urlId, String username) throws InvalidUrlIdException, CredentialsException {
-        Optional<Url> urlOptional = urlRepository.findById(Long.parseLong(urlId));
-        if (urlOptional.isEmpty()) {
-            throw new InvalidUrlIdException("Invalid Url Id:" + urlId);
+    public String callUrl(String id) {
+        Optional<Url> url = urlRepository.findById(Long.parseLong(id));
+        if (url.isEmpty()) {
+            return null;
         }
-        if (!urlOptional.get().getUser().getUsername().equals(username)) {
-            throw new CredentialsException("UrlId :" + urlId + "not belong to username: " + username);
-        }
-        List<Terminal> requests = terminalRepository.findAllByUrl(urlOptional.get());
-        AtomicInteger successful = new AtomicInteger();
-        AtomicInteger unsuccessful = new AtomicInteger();
-        requests.forEach(terminal -> {
-            if (Objects.nonNull(terminal.getStatusCode()) && terminal.getStatusCode() % 100 == 2) {
-                successful.getAndIncrement();
-            } else {
-                unsuccessful.getAndIncrement();
-            }
-        });
-        return new UrlReportResponseDto(successful.get(), unsuccessful.get(), urlOptional.get());
+        url.get().setCount((url.get().getCount() + 1));
+        urlRepository.save(url.get());
+        return url.map(Url::getUri).orElse(null);
     }
 
     private User getUser(String username) {

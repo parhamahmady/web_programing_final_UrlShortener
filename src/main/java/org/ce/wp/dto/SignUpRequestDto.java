@@ -9,5 +9,5 @@ import javax.validation.constraints.NotBlank;
  * @since 27.06.23
  */
 @Schema(title = "SignUp Request")
-public record SignUpRequestDto(@NotBlank String username, @NotBlank String password) {
+public record SignUpRequestDto(@NotBlank String username, @NotBlank String password, @NotBlank String email) {
 }
